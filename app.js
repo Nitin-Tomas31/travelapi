@@ -45,10 +45,10 @@ app.get("/plans", async (req, res) => {
   }
 });
 
-// Get a Specific Travel Plan (GET /plans/:id)
+// Get a Specific Travel Plan by Numeric ID (GET /plans/:id)
 app.get("/plans/:id", async (req, res) => {
   try {
-    const plan = await TravelPlan.findById(req.params.id);
+    const plan = await TravelPlan.findOne({ id: Number(req.params.id) }); // Use numeric ID
     if (!plan) return res.status(404).json({ message: "Plan not found" });
     res.status(200).json(plan);
   } catch (error) {
@@ -56,11 +56,11 @@ app.get("/plans/:id", async (req, res) => {
   }
 });
 
-// Update a Travel Plan (PATCH /plans/:id)
+// Update a Travel Plan by Numeric ID (PATCH /plans/:id)
 app.patch("/plans/:id", async (req, res) => {
   try {
-    const updatedPlan = await TravelPlan.findByIdAndUpdate(
-      req.params.id,
+    const updatedPlan = await TravelPlan.findOneAndUpdate(
+      { id: Number(req.params.id) }, // Use numeric ID
       req.body,
       { new: true }
     );
@@ -72,10 +72,12 @@ app.patch("/plans/:id", async (req, res) => {
   }
 });
 
-// Delete a Travel Plan (DELETE /plans/:id)
+// Delete a Travel Plan by Numeric ID (DELETE /plans/:id)
 app.delete("/plans/:id", async (req, res) => {
   try {
-    const deletedPlan = await TravelPlan.findByIdAndDelete(req.params.id);
+    const deletedPlan = await TravelPlan.findOneAndDelete({
+      id: Number(req.params.id),
+    }); // Use numeric ID
     if (!deletedPlan)
       return res.status(404).json({ message: "Plan not found" });
     res.status(200).json({ message: "Plan deleted successfully" });
